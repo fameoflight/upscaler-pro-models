@@ -1,0 +1,22 @@
+{
+  "inputDescriptions": {
+    "input": {
+      "shortDescription": "Input image tensor input",
+      "metadata": {}
+    }
+  },
+  "outputDescriptions": {
+    "var_1387": {
+      "shortDescription": "Output upscaled image var_1387",
+      "metadata": {}
+    }
+  },
+  "metadata": {
+    "modelDescription": {
+      "shortDescription": "Real-ESRGAN 4x practical super-resolution",
+      "author": "Real-ESRGAN Team (Xintao Wang et al.)",
+      "license": "BSD 3-Clause",
+      "version": "1.0"
+    }
+  }
+}

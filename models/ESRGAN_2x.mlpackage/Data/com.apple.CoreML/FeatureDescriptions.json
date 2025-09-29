@@ -1,0 +1,22 @@
+{
+  "inputDescriptions": {
+    "input": {
+      "shortDescription": "Input image tensor input",
+      "metadata": {}
+    }
+  },
+  "outputDescriptions": {
+    "var_4053": {
+      "shortDescription": "Output upscaled image var_4053",
+      "metadata": {}
+    }
+  },
+  "metadata": {
+    "modelDescription": {
+      "shortDescription": "ESRGAN 2x image upscaler",
+      "author": "ESRGAN Team (Xintao Wang et al.)",
+      "license": "Apache 2.0",
+      "version": "1.0"
+    }
+  }
+}

@@ -1,7 +1,7 @@
 {
     "fileFormatVersion": "1.0.0",
     "itemInfoEntries": {
-        "5735E687-F22B-419E-9B1A-410E77D3AAA6": {
+        "A9396C8E-3693-4625-AA0D-361B8F3EF268": {
             "author": "com.apple.CoreML",
             "description": "CoreML Model Specification",
             "name": "model.mlmodel",
@@ -16,5 +16,5 @@
         "scaleFactor": 4,
         "version": "1.0"
     },
-    "rootModelIdentifier": "5735E687-F22B-419E-9B1A-410E77D3AAA6"
+    "rootModelIdentifier": "A9396C8E-3693-4625-AA0D-361B8F3EF268"
 }
