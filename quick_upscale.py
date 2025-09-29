@@ -28,11 +28,8 @@ from PIL import Image
 # Suppress FutureWarnings from PyTorch
 warnings.filterwarnings("ignore", category=FutureWarning)
 
-# Add Real-ESRGAN to path
-sys.path.append(str(Path(__file__).parent / "Real-ESRGAN"))
-from realesrgan import RealESRGANer
-from realesrgan.archs.srvgg_arch import SRVGGNetCompact
-from basicsr.archs.rrdbnet_arch import RRDBNet
+# Import our custom inference pipeline
+from inference_pipeline import SuperResolutionPipeline, get_optimal_device, estimate_memory_usage
 
 
 class QuickUpscaler:
@@ -242,15 +239,15 @@ class QuickUpscaler:
 
     def get_device(self) -> torch.device:
         """Get the best available device."""
-        if torch.cuda.is_available():
-            device = torch.device('cuda')
+        device = get_optimal_device()
+
+        if device.type == 'cuda':
             print(f"🚀 Using CUDA GPU")
-        elif hasattr(torch.backends, 'mps') and torch.backends.mps.is_available():
-            device = torch.device('mps')
+        elif device.type == 'mps':
             print(f"🚀 Using Apple Silicon GPU (MPS)")
         else:
-            device = torch.device('cpu')
             print(f"⚠️  Using CPU (consider GPU for faster processing)")
+
         return device
 
     def list_models(self):
@@ -361,15 +358,7 @@ class QuickUpscaler:
         # Get device
         device = self.get_device()
 
-        # Create model architecture
-        if model_info["arch"] == "SRVGGNetCompact":
-            model = SRVGGNetCompact(num_in_ch=3, num_out_ch=3, num_feat=64,
-                                   num_conv=32, upscale=4, act_type='prelu')
-        else:  # RRDBNet
-            model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64,
-                           num_block=23, num_grow_ch=32, scale=4)
-
-        # Initialize upsampler
+        # Load model using our custom pipeline
         print(f"   ⏳ Loading model to {device}...")
         start_time = time.time()
 
@@ -377,29 +366,33 @@ class QuickUpscaler:
         total_pixels = w * h
         if tile == 0 and total_pixels > 1000000:  # > 1MP
             suggested_tile = 512 if total_pixels > 4000000 else 256  # 4MP threshold
-            print(f"   💡 Large image detected ({total_pixels:,} pixels)")
+            memory_estimate = estimate_memory_usage(h, w, scale)
+            print(f"   💡 Large image detected ({total_pixels:,} pixels, ~{memory_estimate:.0f}MB)")
             print(f"   💡 Consider using --tile {suggested_tile} if you encounter memory issues")
 
-        upsampler = RealESRGANer(
-            scale=scale,
-            model_path=str(model_path),
+        # Create model and pipeline
+        model = SuperResolutionPipeline.create_model_from_weights(
+            model_path, model_info["arch"], device, scale
+        )
+
+        pipeline = SuperResolutionPipeline(
             model=model,
-            tile=tile,
+            device=device,
+            scale=scale,
+            tile_size=tile,
             tile_pad=10,
-            pre_pad=0,
-            half=half_precision,
-            device=device
+            half_precision=half_precision
         )
 
         load_time = time.time() - start_time
         print(f"   ✅ Model loaded in {load_time:.2f}s")
 
         # Process image
-        print(f"   🔄 Processing...")
+        print(f"   🔄 Processing with custom pipeline...")
         process_start = time.time()
 
         try:
-            output, _ = upsampler.enhance(img, outscale=scale)
+            output, _ = pipeline.enhance(img, outscale=scale)
         except Exception as e:
             if "out of memory" in str(e).lower():
                 print(f"   ❌ Out of memory! Try --tile 512 or --tile 256")
