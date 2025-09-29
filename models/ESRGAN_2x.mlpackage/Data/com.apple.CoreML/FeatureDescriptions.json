@@ -1,0 +1,18 @@
+{
+  "Inputs" : {
+    "input" : {
+      "MLFeatureShortDescription" : "Input image tensor (NCHW format)"
+    }
+  },
+  "Outputs" : {
+    "var_162" : {
+      "MLFeatureShortDescription" : ""
+    }
+  },
+  "TrainingInputs" : {
+
+  },
+  "States" : {
+
+  }
+}
