@@ -18,7 +18,9 @@
       "Bash(./list_models.sh:*)",
       "Bash(pip uninstall:*)",
       "Bash(python3.11:*)",
-      "WebFetch(domain:drive.google.com)"
+      "WebFetch(domain:drive.google.com)",
+      "Bash(./upscale:*)",
+      "Bash(/Users/hemantv/workspace/upscaler-pro-models/venv/bin/python:*)"
     ],
     "deny": [],
     "ask": []

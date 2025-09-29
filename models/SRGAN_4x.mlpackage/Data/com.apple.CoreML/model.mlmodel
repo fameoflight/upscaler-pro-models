@@ -1,13 +1,13 @@
-é
+å
 ?
 input_image&Input image to upscale by 4x using GAN"@@RR
 output_image6Upscaled image (4x resolution) with perceptual quality
-"ÄÄ¢ı
+"ÄÄ¢Û
 SRGAN 4x Super-Resolution GAN1.0.0SRGAN Team - Converted for iOS"
-Apache 2.0¢:
-+com.github.apple.coremltools.source_dialectTorchScript¢3
-#com.github.apple.coremltools.sourcetorch==2.8.0¢-
-$com.github.apple.coremltools.version8.3.0≤±Œ¡Ã
+Apache 2.0¢+
+$com.github.apple.coremltools.version8.0¢3
+#com.github.apple.coremltools.sourcetorch==2.4.0¢:
++com.github.apple.coremltools.source_dialectTorchScript≤ØŒ¡Ã
 main∑Ã
 -
 input_image
@@ -30,13 +30,13 @@ $com.github.apple.coremltools.version8.3.0≤±Œ¡Ã
 
 "
 input_image__scaled___y_0•
-mul"
-y
-
-input_image__scaled___y_0
+mul
 x
 
-input_image7
+input_image"
+y
+
+input_image__scaled___y_07
 input_image__scaled__
 
 
@@ -183,31 +183,31 @@ $com.github.apple.coremltools.version8.3.0≤±Œ¡Ã
 
 "
 cast_1Ï
-conv
-pad
-
-input_1_pad_0
-bias
-
-conv1_bias_to_fp16
+conv
 groups
 
-input_1_groups_0
-x
-
-input_image_to_fp16$
+input_1_groups_0$
 	dilations
 
-input_1_dilations_0 
-strides
-
-input_1_strides_0"
+input_1_dilations_0
+bias
+
+conv1_bias_to_fp16"
 weight
 
 conv1_weight_to_fp16"
 pad_type
 
-input_1_pad_type_03
+input_1_pad_type_0
+x
+
+input_image_to_fp16
+pad
+
+input_1_pad_0 
+strides
+
+input_1_strides_03
 input_1_cast_fp16
 
 
@@ -339,31 +339,31 @@ $com.github.apple.coremltools.version8.3.0≤±Œ¡Ã
 &
 $""
  residual_blocks_0_0_bias_to_fp16Ü
-conv
-pad
-
-input_5_pad_0,
-bias$
-"
- residual_blocks_0_0_bias_to_fp16
+conv
 groups
 
-input_5_groups_0
-x
-
-input_3_cast_fp16$
+input_5_groups_0$
 	dilations
 
-input_5_dilations_0 
-strides
-
-input_5_strides_00
+input_5_dilations_0,
+bias$
+"
+ residual_blocks_0_0_bias_to_fp160
 weight&
 $
 "residual_blocks_0_0_weight_to_fp16"
 pad_type
 
-input_5_pad_type_03
+input_5_pad_type_0
+x
+
+input_3_cast_fp16
+pad
+
+input_5_pad_0 
+strides
+
+input_5_strides_03
 input_5_cast_fp16
 
 
@@ -495,31 +495,31 @@ $
 &
 $""
  residual_blocks_0_2_bias_to_fp16˛
-conv
-pad
-
-var_51_pad_0,
-bias$
-"
- residual_blocks_0_2_bias_to_fp16
+conv
 groups
 
-var_51_groups_0
-x
-
-input_7_cast_fp16#
+var_51_groups_0#
 	dilations
 
-var_51_dilations_0
-strides
-
-var_51_strides_00
+var_51_dilations_0,
+bias$
+"
+ residual_blocks_0_2_bias_to_fp160
 weight&
 $
 "residual_blocks_0_2_weight_to_fp16!
 pad_type
 
-var_51_pad_type_02
+var_51_pad_type_0
+x
+
+input_7_cast_fp16
+pad
+
+var_51_pad_0
+strides
+
+var_51_strides_02
 var_51_cast_fp16
 
 
@@ -531,13 +531,13 @@ $
 
 "
 op_51_cast_fp16ö
-add
-y
-
-var_51_cast_fp16
+add
 x
 
-input_3_cast_fp163
+input_3_cast_fp16
+y
+
+var_51_cast_fp163
 input_9_cast_fp16
 
 
@@ -654,31 +654,31 @@ $
 &
 $""
  residual_blocks_1_0_bias_to_fp16ç
-conv
-pad
-
-input_11_pad_0,
-bias$
-"
- residual_blocks_1_0_bias_to_fp16
+conv
 groups
 
-input_11_groups_0
-x
-
-input_9_cast_fp16%
+input_11_groups_0%
 	dilations
 
-input_11_dilations_0!
-strides
-
-input_11_strides_00
+input_11_dilations_0,
+bias$
+"
+ residual_blocks_1_0_bias_to_fp160
 weight&
 $
 "residual_blocks_1_0_weight_to_fp16#
 pad_type
 
-input_11_pad_type_04
+input_11_pad_type_0
+x
+
+input_9_cast_fp16
+pad
+
+input_11_pad_0!
+strides
+
+input_11_strides_04
 input_11_cast_fp16
 
 
@@ -810,31 +810,31 @@ $
 &
 $""
  residual_blocks_1_2_bias_to_fp16ˇ
-conv
-pad
-
-var_74_pad_0,
-bias$
-"
- residual_blocks_1_2_bias_to_fp16
+conv
 groups
 
-var_74_groups_0
-x
-
-input_13_cast_fp16#
+var_74_groups_0#
 	dilations
 
-var_74_dilations_0
-strides
-
-var_74_strides_00
+var_74_dilations_0,
+bias$
+"
+ residual_blocks_1_2_bias_to_fp160
 weight&
 $
 "residual_blocks_1_2_weight_to_fp16!
 pad_type
 
-var_74_pad_type_02
+var_74_pad_type_0
+x
+
+input_13_cast_fp16
+pad
+
+var_74_pad_0
+strides
+
+var_74_strides_02
 var_74_cast_fp16
 
 
@@ -846,13 +846,13 @@ $
 
 "
 op_74_cast_fp16ú
-add
-y
-
-var_74_cast_fp16
+add
 x
 
-input_9_cast_fp164
+input_9_cast_fp16
+y
+
+var_74_cast_fp164
 input_15_cast_fp16
 
 
@@ -969,31 +969,31 @@ $
 &
 $""
  residual_blocks_2_0_bias_to_fp16é
-conv
-pad
-
-input_17_pad_0,
-bias$
-"
- residual_blocks_2_0_bias_to_fp16
+conv
 groups
 
-input_17_groups_0
-x
-
-input_15_cast_fp16%
+input_17_groups_0%
 	dilations
 
-input_17_dilations_0!
-strides
-
-input_17_strides_00
+input_17_dilations_0,
+bias$
+"
+ residual_blocks_2_0_bias_to_fp160
 weight&
 $
 "residual_blocks_2_0_weight_to_fp16#
 pad_type
 
-input_17_pad_type_04
+input_17_pad_type_0
+x
+
+input_15_cast_fp16
+pad
+
+input_17_pad_0!
+strides
+
+input_17_strides_04
 input_17_cast_fp16
 
 
@@ -1125,31 +1125,31 @@ $
 &
 $""
  residual_blocks_2_2_bias_to_fp16ˇ
-conv
-pad
-
-var_97_pad_0,
-bias$
-"
- residual_blocks_2_2_bias_to_fp16
+conv
 groups
 
-var_97_groups_0
-x
-
-input_19_cast_fp16#
+var_97_groups_0#
 	dilations
 
-var_97_dilations_0
-strides
-
-var_97_strides_00
+var_97_dilations_0,
+bias$
+"
+ residual_blocks_2_2_bias_to_fp160
 weight&
 $
 "residual_blocks_2_2_weight_to_fp16!
 pad_type
 
-var_97_pad_type_02
+var_97_pad_type_0
+x
+
+input_19_cast_fp16
+pad
+
+var_97_pad_0
+strides
+
+var_97_strides_02
 var_97_cast_fp16
 
 
@@ -1161,13 +1161,13 @@ $
 
 "
 op_97_cast_fp16ù
-add
-y
-
-var_97_cast_fp16
+add
 x
 
-input_15_cast_fp164
+input_15_cast_fp16
+y
+
+var_97_cast_fp164
 input_21_cast_fp16
 
 
@@ -1284,31 +1284,31 @@ $
 &
 $""
  residual_blocks_3_0_bias_to_fp16é
-conv
-pad
-
-input_23_pad_0,
-bias$
-"
- residual_blocks_3_0_bias_to_fp16
+conv
 groups
 
-input_23_groups_0
-x
-
-input_21_cast_fp16%
+input_23_groups_0%
 	dilations
 
-input_23_dilations_0!
-strides
-
-input_23_strides_00
+input_23_dilations_0,
+bias$
+"
+ residual_blocks_3_0_bias_to_fp160
 weight&
 $
 "residual_blocks_3_0_weight_to_fp16#
 pad_type
 
-input_23_pad_type_04
+input_23_pad_type_0
+x
+
+input_21_cast_fp16
+pad
+
+input_23_pad_0!
+strides
+
+input_23_strides_04
 input_23_cast_fp16
 
 
@@ -1440,31 +1440,31 @@ $
 &
 $""
  residual_blocks_3_2_bias_to_fp16Ü
-conv
-pad
-
-var_120_pad_0,
-bias$
-"
- residual_blocks_3_2_bias_to_fp16
+conv
 groups
 
-var_120_groups_0
-x
-
-input_25_cast_fp16$
+var_120_groups_0$
 	dilations
 
-var_120_dilations_0 
-strides
-
-var_120_strides_00
+var_120_dilations_0,
+bias$
+"
+ residual_blocks_3_2_bias_to_fp160
 weight&
 $
 "residual_blocks_3_2_weight_to_fp16"
 pad_type
 
-var_120_pad_type_03
+var_120_pad_type_0
+x
+
+input_25_cast_fp16
+pad
+
+var_120_pad_0 
+strides
+
+var_120_strides_03
 var_120_cast_fp16
 
 
@@ -1476,13 +1476,13 @@ $
 
 "
 op_120_cast_fp16û
-add
-y
-
-var_120_cast_fp16
+add
 x
 
-input_21_cast_fp164
+input_21_cast_fp16
+y
+
+var_120_cast_fp164
 input_27_cast_fp16
 
 
@@ -1599,31 +1599,31 @@ $
 &
 $""
  residual_blocks_4_0_bias_to_fp16é
-conv
-pad
-
-input_29_pad_0,
-bias$
-"
- residual_blocks_4_0_bias_to_fp16
+conv
 groups
 
-input_29_groups_0
-x
-
-input_27_cast_fp16%
+input_29_groups_0%
 	dilations
 
-input_29_dilations_0!
-strides
-
-input_29_strides_00
+input_29_dilations_0,
+bias$
+"
+ residual_blocks_4_0_bias_to_fp160
 weight&
 $
 "residual_blocks_4_0_weight_to_fp16#
 pad_type
 
-input_29_pad_type_04
+input_29_pad_type_0
+x
+
+input_27_cast_fp16
+pad
+
+input_29_pad_0!
+strides
+
+input_29_strides_04
 input_29_cast_fp16
 
 
@@ -1755,31 +1755,31 @@ $
 &
 $""
  residual_blocks_4_2_bias_to_fp16Ü
-conv
-pad
-
-var_143_pad_0,
-bias$
-"
- residual_blocks_4_2_bias_to_fp16
+conv
 groups
 
-var_143_groups_0
-x
-
-input_31_cast_fp16$
+var_143_groups_0$
 	dilations
 
-var_143_dilations_0 
-strides
-
-var_143_strides_00
+var_143_dilations_0,
+bias$
+"
+ residual_blocks_4_2_bias_to_fp160
 weight&
 $
 "residual_blocks_4_2_weight_to_fp16"
 pad_type
 
-var_143_pad_type_03
+var_143_pad_type_0
+x
+
+input_31_cast_fp16
+pad
+
+var_143_pad_0 
+strides
+
+var_143_strides_03
 var_143_cast_fp16
 
 
@@ -1791,13 +1791,13 @@ $
 
 "
 op_143_cast_fp16û
-add
-y
-
-var_143_cast_fp16
+add
 x
 
-input_27_cast_fp164
+input_27_cast_fp16
+y
+
+var_143_cast_fp164
 input_33_cast_fp16
 
 
@@ -1914,31 +1914,31 @@ $
 &
 $""
  residual_blocks_5_0_bias_to_fp16é
-conv
-pad
-
-input_35_pad_0,
-bias$
-"
- residual_blocks_5_0_bias_to_fp16
+conv
 groups
 
-input_35_groups_0
-x
-
-input_33_cast_fp16%
+input_35_groups_0%
 	dilations
 
-input_35_dilations_0!
-strides
-
-input_35_strides_00
+input_35_dilations_0,
+bias$
+"
+ residual_blocks_5_0_bias_to_fp160
 weight&
 $
 "residual_blocks_5_0_weight_to_fp16#
 pad_type
 
-input_35_pad_type_04
+input_35_pad_type_0
+x
+
+input_33_cast_fp16
+pad
+
+input_35_pad_0!
+strides
+
+input_35_strides_04
 input_35_cast_fp16
 
 
@@ -2070,31 +2070,31 @@ $
 &
 $""
  residual_blocks_5_2_bias_to_fp16Ü
-conv
-pad
-
-var_166_pad_0,
-bias$
-"
- residual_blocks_5_2_bias_to_fp16
+conv
 groups
 
-var_166_groups_0
-x
-
-input_37_cast_fp16$
+var_166_groups_0$
 	dilations
 
-var_166_dilations_0 
-strides
-
-var_166_strides_00
+var_166_dilations_0,
+bias$
+"
+ residual_blocks_5_2_bias_to_fp160
 weight&
 $
 "residual_blocks_5_2_weight_to_fp16"
 pad_type
 
-var_166_pad_type_03
+var_166_pad_type_0
+x
+
+input_37_cast_fp16
+pad
+
+var_166_pad_0 
+strides
+
+var_166_strides_03
 var_166_cast_fp16
 
 
@@ -2106,13 +2106,13 @@ $
 
 "
 op_166_cast_fp16û
-add
-y
-
-var_166_cast_fp16
+add
 x
 
-input_33_cast_fp164
+input_33_cast_fp16
+y
+
+var_166_cast_fp164
 input_39_cast_fp16
 
 
@@ -2231,32 +2231,32 @@ x_groups_0∫
 
 "
 conv2_bias_to_fp16¡
-conv
-pad
-	
-x_pad_0
-bias
-
-conv2_bias_to_fp16
+conv
 groups
 
 
-x_groups_0
-x
-
-input_39_cast_fp16
+x_groups_0
 	dilations
 
-x_dilations_0
-strides
-
-x_strides_0"
+x_dilations_0
+bias
+
+conv2_bias_to_fp16"
 weight
 
 conv2_weight_to_fp16
 pad_type
 
-x_pad_type_0-
+x_pad_type_0
+x
+
+input_39_cast_fp16
+pad
+	
+x_pad_0
+strides
+
+x_strides_0-
 x_cast_fp16
 
 
@@ -2268,13 +2268,13 @@ x_groups_0
 
 "
 x_cast_fp16ó
-add
-y
-
-input_3_cast_fp16
+add
 x
 
-x_cast_fp164
+x_cast_fp16
+y
+
+input_3_cast_fp164
 input_41_cast_fp16
 
 
@@ -2403,31 +2403,31 @@ x_groups_0
 
 "
 upsampling_0_bias_to_fp16Ä
-conv
-pad
-
-input_43_pad_0%
-bias
-
-upsampling_0_bias_to_fp16
+conv
 groups
 
-input_43_groups_0
-x
-
-input_41_cast_fp16%
+input_43_groups_0%
 	dilations
 
-input_43_dilations_0!
-strides
-
-input_43_strides_0)
+input_43_dilations_0%
+bias
+
+upsampling_0_bias_to_fp16)
 weight
 
 upsampling_0_weight_to_fp16#
 pad_type
 
-input_43_pad_type_04
+input_43_pad_type_0
+x
+
+input_41_cast_fp16
+pad
+
+input_43_pad_0!
+strides
+
+input_43_strides_04
 input_43_cast_fp16
 
 
@@ -2439,13 +2439,13 @@ x_groups_0
 
 "
 input_43_cast_fp16≠
-pixel_shuffle
-upscale_factor
-	
-var_182
+pixel_shuffle
 x
 
-input_43_cast_fp166
+input_43_cast_fp16
+upscale_factor
+	
+var_1826
 input_45_cast_fp16 
 
 
@@ -2577,31 +2577,31 @@ x_groups_0
 
 "
 upsampling_3_bias_to_fp16Ç
-conv
-pad
-
-input_49_pad_0%
-bias
-
-upsampling_3_bias_to_fp16
+conv
 groups
 
-input_49_groups_0
-x
-
-input_47_cast_fp16%
+input_49_groups_0%
 	dilations
 
-input_49_dilations_0!
-strides
-
-input_49_strides_0)
+input_49_dilations_0%
+bias
+
+upsampling_3_bias_to_fp16)
 weight
 
 upsampling_3_weight_to_fp16#
 pad_type
 
-input_49_pad_type_06
+input_49_pad_type_0
+x
+
+input_47_cast_fp16
+pad
+
+input_49_pad_0!
+strides
+
+input_49_strides_06
 input_49_cast_fp16 
 
 
@@ -2613,13 +2613,13 @@ x_groups_0
 
 "
 input_49_cast_fp16≠
-pixel_shuffle
-upscale_factor
-	
-var_182
+pixel_shuffle
 x
 
-input_49_cast_fp166
+input_49_cast_fp16
+upscale_factor
+	
+var_1826
 input_51_cast_fp16 
 
 
@@ -2748,36 +2748,36 @@ x_groups_0
 
 
 :
-O$ﬁâ!*(
+ØöM%⁄£*(
 name 
 
 "
 conv3_bias_to_fp16È
-conv
-pad
-
-var_218_pad_0
-bias
-
-conv3_bias_to_fp16
+conv
 groups
 
-var_218_groups_0
-x
-
-input_cast_fp16$
+var_218_groups_0$
 	dilations
 
-var_218_dilations_0 
-strides
-
-var_218_strides_0"
+var_218_dilations_0
+bias
+
+conv3_bias_to_fp16"
 weight
 
 conv3_weight_to_fp16"
 pad_type
 
-var_218_pad_type_05
+var_218_pad_type_0
+x
+
+input_cast_fp16
+pad
+
+var_218_pad_0 
+strides
+
+var_218_strides_05
 var_218_cast_fp16 
 
 
@@ -2818,19 +2818,19 @@ $""
 
 
 "
-cast_0"Á
-	buildInfoŸ"
+cast_0"Â
+	buildInfo◊"
 
 
-∆"√
-8
+ƒ"¡
+6
 !
 
 "
-coremltools-version
-
-	"
-8.3.0
+coremltools-version
+	
+"
+8.0
 @
 )
 !
@@ -2838,7 +2838,7 @@ $""
 coremltools-component-torch
 
 	"
-2.8.0
+2.4.0
 E
 (
  

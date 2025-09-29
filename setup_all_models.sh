@@ -22,7 +22,7 @@ source venv/bin/activate
 # Install required packages
 echo "⬇️  Installing Python packages..."
 pip install --upgrade pip
-pip install torch==2.8.0 torchvision==0.23.0 coremltools==8.3 numpy==1.26.4 huggingface_hub==0.26.0 gdown==4.7.1
+pip install -r requirements.txt
 
 # Create directories
 mkdir -p models
