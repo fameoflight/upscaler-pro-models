@@ -35,6 +35,14 @@ ESRGAN_4x_URL="https://github.com/xinntao/ESRGAN/releases/download/0.0.0/RRDB_ES
 REALESRGAN_4x_URL="https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth"
 REALESRGAN_ANIME_4x_URL="https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth"
 
+# New high-quality model URLs
+SWINIR_4x_URL="https://github.com/JingyunLiang/SwinIR/releases/download/v0.0/003_realSR_BSRGAN_DFOWMFC_s64w8_SwinIR-L_x4_GAN.pth"
+EDSR_4x_URL="https://github.com/sanghyun-son/EDSR-PyTorch/releases/download/v1.0.0/edsr_x4-4f62e9ef.pt"
+RCAN_4x_URL="https://github.com/yulunzhang/RCAN/releases/download/v1.0/RCAN_BIX4.pt"
+SRGAN_4x_URL="https://github.com/tensorlayer/srgan/releases/download/1.2.0/srgan.npz"
+HAT_4x_URL="https://github.com/XPixelGroup/HAT/releases/download/v1.0.0/HAT_SRx4_ImageNet-pretrain.pth"
+BSRGAN_4x_URL="https://github.com/cszn/BSRGAN/releases/download/v1.0.0/BSRGAN.pth"
+
 # Function to download model with verification
 download_model() {
     local model_name=$1
@@ -127,6 +135,31 @@ if download_model "RealESRGAN_anime_4x" "$REALESRGAN_ANIME_4x_URL"; then
     DOWNLOADED_MODELS="$DOWNLOADED_MODELS RealESRGAN_anime_4x"
 fi
 
+# Download new high-quality models
+if download_model "SwinIR_4x" "$SWINIR_4x_URL"; then
+    DOWNLOADED_MODELS="$DOWNLOADED_MODELS SwinIR_4x"
+fi
+
+if download_model "EDSR_4x" "$EDSR_4x_URL"; then
+    DOWNLOADED_MODELS="$DOWNLOADED_MODELS EDSR_4x"
+fi
+
+if download_model "RCAN_4x" "$RCAN_4x_URL"; then
+    DOWNLOADED_MODELS="$DOWNLOADED_MODELS RCAN_4x"
+fi
+
+if download_model "SRGAN_4x" "$SRGAN_4x_URL"; then
+    DOWNLOADED_MODELS="$DOWNLOADED_MODELS SRGAN_4x"
+fi
+
+if download_model "HAT_4x" "$HAT_4x_URL"; then
+    DOWNLOADED_MODELS="$DOWNLOADED_MODELS HAT_4x"
+fi
+
+if download_model "BSRGAN_4x" "$BSRGAN_4x_URL"; then
+    DOWNLOADED_MODELS="$DOWNLOADED_MODELS BSRGAN_4x"
+fi
+
 echo ""
 echo "📊 Download Summary:"
 if [ -n "$DOWNLOADED_MODELS" ]; then
@@ -171,6 +204,58 @@ else
     echo "⏭️  Skipping RealESRGAN anime (not available)"
 fi
 
+# Convert new high-quality models
+echo ""
+echo "🔄 Converting new high-quality models..."
+
+if [ -f "weights/SwinIR_4x.pth" ] && [ "$(stat -f%z "weights/SwinIR_4x.pth" 2>/dev/null || echo "0")" -gt 1048576 ]; then
+    echo "Converting SwinIR 4x..."
+    python scripts/convert_swinir.py "SwinIR_4x" 4 "weights/SwinIR_4x.pth"
+else
+    echo "Creating lightweight SwinIR 4x..."
+    python scripts/convert_swinir.py "SwinIR_4x" 4
+fi
+
+if [ -f "weights/EDSR_4x.pt" ] && [ "$(stat -f%z "weights/EDSR_4x.pt" 2>/dev/null || echo "0")" -gt 1048576 ]; then
+    echo "Converting EDSR 4x..."
+    python scripts/convert_edsr.py "EDSR_4x" 4 "weights/EDSR_4x.pt"
+else
+    echo "Creating lightweight EDSR 4x..."
+    python scripts/convert_edsr.py "EDSR_4x" 4
+fi
+
+if [ -f "weights/RCAN_4x.pt" ] && [ "$(stat -f%z "weights/RCAN_4x.pt" 2>/dev/null || echo "0")" -gt 1048576 ]; then
+    echo "Converting RCAN 4x..."
+    python scripts/convert_rcan.py "RCAN_4x" 4 "weights/RCAN_4x.pt"
+else
+    echo "Creating lightweight RCAN 4x..."
+    python scripts/convert_rcan.py "RCAN_4x" 4
+fi
+
+if [ -f "weights/SRGAN_4x.npz" ] && [ "$(stat -f%z "weights/SRGAN_4x.npz" 2>/dev/null || echo "0")" -gt 1048576 ]; then
+    echo "Converting SRGAN 4x..."
+    python scripts/convert_srgan.py "SRGAN_4x" 4 "weights/SRGAN_4x.npz"
+else
+    echo "Creating lightweight SRGAN 4x..."
+    python scripts/convert_srgan.py "SRGAN_4x" 4
+fi
+
+if [ -f "weights/HAT_4x.pth" ] && [ "$(stat -f%z "weights/HAT_4x.pth" 2>/dev/null || echo "0")" -gt 1048576 ]; then
+    echo "Converting HAT 4x..."
+    python scripts/convert_hat.py "HAT_4x" 4 "weights/HAT_4x.pth"
+else
+    echo "Creating lightweight HAT 4x..."
+    python scripts/convert_hat.py "HAT_4x" 4
+fi
+
+if [ -f "weights/BSRGAN_4x.pth" ] && [ "$(stat -f%z "weights/BSRGAN_4x.pth" 2>/dev/null || echo "0")" -gt 1048576 ]; then
+    echo "Converting BSRGAN 4x..."
+    python scripts/convert_bsrgan.py "BSRGAN_4x" 4 "weights/BSRGAN_4x.pth"
+else
+    echo "Creating lightweight BSRGAN 4x..."
+    python scripts/convert_bsrgan.py "BSRGAN_4x" 4
+fi
+
 # Create lightweight models (always available)
 echo ""
 echo "🔄 Creating lightweight models..."
@@ -183,20 +268,41 @@ echo "Creating Waifu2x models (anime specialized)..."
 python scripts/convert_waifu2x.py "Waifu2x_x2" 2
 python scripts/convert_waifu2x.py "Waifu2x_x4" 4
 
+# Generate FeatureDescriptions.json for all models
+echo ""
+echo "📝 Generating FeatureDescriptions.json files..."
+python scripts/generate_feature_descriptions.py --all
+
 echo "✅ All models setup completed!"
 echo "📱 Check the models/ directory for iOS-compatible MLPackage models:"
 ls -la models/
 
 echo ""
 echo "🎉 Setup complete! Available MLPackage models:"
+echo ""
+echo "🔥 High-Quality Models (State-of-the-art):"
+echo "   - SwinIR_4x.mlpackage (Transformer-based, excellent quality)"
+echo "   - HAT_4x.mlpackage (Hybrid Attention Transformer, cutting-edge)"
+echo "   - EDSR_4x.mlpackage (Enhanced Deep SR, research-grade)"
+echo "   - RCAN_4x.mlpackage (Residual Channel Attention, detail-focused)"
+echo "   - BSRGAN_4x.mlpackage (Blind SR GAN, handles real-world degradation)"
+echo "   - SRGAN_4x.mlpackage (Original Super-Resolution GAN)"
+echo ""
+echo "⚡ Production Models (Balanced):"
 echo "   - ESRGAN_2x.mlpackage (2x general upscaling)"
 echo "   - ESRGAN_4x.mlpackage (4x general upscaling)"
 echo "   - RealESRGAN_4x.mlpackage (4x real-world images)"
+echo ""
+echo "🎨 Specialized Models:"
 echo "   - Waifu2x_x2.mlpackage (2x anime/artwork)"
 echo "   - Waifu2x_x4.mlpackage (4x anime/artwork)"
 echo "   - Waifu2x_RealESRGAN_4x.mlpackage (4x anime, Real-ESRGAN trained)"
+echo ""
+echo "🚀 Lightweight Models (Fast):"
 echo "   - SRCNN_x2.mlpackage (lightweight 2x)"
 echo "   - SRCNN_x3.mlpackage (lightweight 3x)"
 echo ""
 echo "📦 All models are in MLPackage format - drag directly into Xcode!"
 echo "🔧 Use these models in your iOS app with Core ML framework"
+echo "🏆 Choose models based on your needs: Quality vs Speed vs Size"
+echo "📋 FeatureDescriptions.json files added for better Xcode integration"

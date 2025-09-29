@@ -5,7 +5,46 @@ This repository contains machine learning models and conversion scripts for the 
 
 ## Available Models
 
-### ESRGAN Models
+### 🔥 State-of-the-Art Models (Highest Quality)
+
+- **SwinIR_4x**: Swin Transformer for Image Restoration
+  - Use case: Highest quality upscaling, research-grade results
+  - Scale factor: 4x
+  - Model size: ~45MB
+  - Architecture: Vision Transformer with window attention
+
+- **HAT_4x**: Hybrid Attention Transformer
+  - Use case: Cutting-edge quality with attention mechanisms
+  - Scale factor: 4x
+  - Model size: ~42MB
+  - Architecture: Hybrid CNN-Transformer with channel & spatial attention
+
+- **EDSR_4x**: Enhanced Deep Super-Resolution
+  - Use case: Research-grade quality, stable performance
+  - Scale factor: 4x
+  - Model size: ~38MB
+  - Architecture: Deep residual network without batch normalization
+
+- **RCAN_4x**: Residual Channel Attention Networks
+  - Use case: Detail-focused upscaling with attention
+  - Scale factor: 4x
+  - Model size: ~35MB
+  - Architecture: Channel attention with residual groups
+
+- **BSRGAN_4x**: Blind Super-Resolution GAN
+  - Use case: Real-world images with unknown degradation
+  - Scale factor: 4x
+  - Model size: ~67MB
+  - Architecture: GAN-based with blind degradation handling
+
+- **SRGAN_4x**: Super-Resolution Generative Adversarial Network
+  - Use case: Perceptual quality, original GAN approach
+  - Scale factor: 4x
+  - Model size: ~25MB
+  - Architecture: Generator with perceptual loss
+
+### ⚡ Production Models (Balanced Quality/Performance)
+
 - **ESRGAN_2x**: Enhanced Super-Resolution GAN for 2x upscaling
   - Use case: General purpose, balanced quality/performance
   - Scale factor: 2x
@@ -16,18 +55,22 @@ This repository contains machine learning models and conversion scripts for the 
   - Scale factor: 4x
   - Model size: ~65MB
 
-### Real-ESRGAN Models
+### 🌍 Real-World Specialized Models
+
 - **RealESRGAN_4x**: Practical super-resolution for real-world images
   - Use case: Photography, natural images
   - Scale factor: 4x
   - Model size: ~67MB
+
+### 🎨 Anime/Artwork Specialized Models
 
 - **Waifu2x_x4**: Specialized for anime/artwork upscaling
   - Use case: Anime, illustrations, digital art
   - Scale factor: 4x
   - Model size: ~67MB
 
-### SRCNN Models (Lightweight)
+### 🚀 Lightweight Models (Fast Processing)
+
 - **SRCNN_x2**: Super-Resolution Convolutional Neural Network
   - Use case: Fast processing, lower quality acceptable
   - Scale factor: 2x
@@ -106,10 +149,44 @@ let output = try model.prediction(from: input)
 ### Model Selection Logic
 The models are designed to work with the `MLModelRegistry.swift` system:
 
-- **General images**: RealESRGAN_4x → ESRGAN_4x fallback
-- **Anime/Art**: Waifu2x_x4 → ESRGAN_4x fallback
-- **Fast processing**: SRCNN_x2 → SRCNN_x3
-- **Photos**: ESRGAN_4x → RealESRGAN_4x fallback
+#### Quality-First Approach (Best Results)
+- **Highest Quality**: SwinIR_4x → HAT_4x → EDSR_4x → RCAN_4x fallback
+- **Real-world photos**: BSRGAN_4x → RealESRGAN_4x → ESRGAN_4x fallback
+- **Anime/Art**: Waifu2x_x4 → SRGAN_4x → ESRGAN_4x fallback
+- **General images**: EDSR_4x → RCAN_4x → ESRGAN_4x fallback
+
+#### Performance-First Approach (Balanced)
+- **General images**: ESRGAN_4x → RealESRGAN_4x → EDSR_4x fallback
+- **Real-world photos**: RealESRGAN_4x → BSRGAN_4x → ESRGAN_4x fallback
+- **Anime/Art**: Waifu2x_x4 → SRGAN_4x → ESRGAN_4x fallback
+- **Fast processing**: SRCNN_x2 → SRCNN_x3 → ESRGAN_2x fallback
+
+#### Speed-First Approach (Mobile Optimized)
+- **Fast processing**: SRCNN_x2 → SRCNN_x3 → ESRGAN_2x fallback
+- **Lightweight general**: ESRGAN_2x → SRCNN_x3 → ESRGAN_4x fallback
+
+### Model Comparison Guide
+
+| Model | Quality | Speed | Size | Best For | Architecture |
+|-------|---------|-------|------|----------|-------------|
+| **SwinIR_4x** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | 45MB | Research-grade results | Vision Transformer |
+| **HAT_4x** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | 42MB | Cutting-edge quality | Hybrid Attention |
+| **EDSR_4x** | ⭐⭐⭐⭐ | ⭐⭐⭐ | 38MB | Stable, consistent | Deep Residual |
+| **RCAN_4x** | ⭐⭐⭐⭐ | ⭐⭐⭐ | 35MB | Fine details | Channel Attention |
+| **BSRGAN_4x** | ⭐⭐⭐⭐ | ⭐⭐ | 67MB | Real-world photos | Blind SR GAN |
+| **SRGAN_4x** | ⭐⭐⭐⭐ | ⭐⭐⭐ | 25MB | Perceptual quality | GAN-based |
+| **ESRGAN_4x** | ⭐⭐⭐ | ⭐⭐⭐⭐ | 65MB | General purpose | Enhanced GAN |
+| **RealESRGAN_4x** | ⭐⭐⭐ | ⭐⭐⭐⭐ | 67MB | Natural images | Practical GAN |
+| **Waifu2x_x4** | ⭐⭐⭐ | ⭐⭐⭐⭐ | 67MB | Anime/artwork | Specialized CNN |
+| **SRCNN_x2** | ⭐⭐ | ⭐⭐⭐⭐⭐ | 5MB | Fast processing | Lightweight CNN |
+| **SRCNN_x3** | ⭐⭐ | ⭐⭐⭐⭐⭐ | 5MB | Fast processing | Lightweight CNN |
+
+#### Recommendations by Use Case:
+- **📸 Photography**: BSRGAN_4x → RealESRGAN_4x → SwinIR_4x
+- **🎨 Digital Art**: Waifu2x_x4 → SRGAN_4x → HAT_4x
+- **🏃 Real-time Apps**: SRCNN_x2 → ESRGAN_2x → SRCNN_x3
+- **🔬 Research/Quality**: SwinIR_4x → HAT_4x → EDSR_4x
+- **📱 Mobile Apps**: SRCNN_x2 → EDSR_4x → RCAN_4x
 
 ## Development Workflow
 
