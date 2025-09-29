@@ -1,0 +1,22 @@
+{
+  "inputDescriptions": {
+    "input": {
+      "shortDescription": "Input image tensor input",
+      "metadata": {}
+    }
+  },
+  "outputDescriptions": {
+    "var_123": {
+      "shortDescription": "Output upscaled image var_123",
+      "metadata": {}
+    }
+  },
+  "metadata": {
+    "modelDescription": {
+      "shortDescription": "Waifu2x 2x anime/artwork upscaler",
+      "author": "Waifu2x Implementation",
+      "license": "MIT",
+      "version": "1.0"
+    }
+  }
+}

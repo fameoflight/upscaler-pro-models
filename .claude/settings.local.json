@@ -15,7 +15,9 @@
       "Bash(./setup_and_convert_ios.sh:*)",
       "Bash(./create_mlpackage.sh:*)",
       "Bash(./setup_all_models.sh:*)",
-      "Bash(./list_models.sh:*)"
+      "Bash(./list_models.sh:*)",
+      "Bash(pip uninstall:*)",
+      "Bash(python3.11:*)"
     ],
     "deny": [],
     "ask": []

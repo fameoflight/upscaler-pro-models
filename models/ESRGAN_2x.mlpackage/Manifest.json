@@ -1,10 +1,20 @@
 {
-  "fileFormatVersion": "1.0.0",
-  "itemInfoEntries": {
-    "Data": {
-      "path": "Data",
-      "digest": "placeholder_digest",
-      "isDirectory": true
-    }
-  }
+    "fileFormatVersion": "1.0.0",
+    "itemInfoEntries": {
+        "B2C9E5E3-3E9D-4373-9994-BB10EB363750": {
+            "author": "com.apple.CoreML",
+            "description": "CoreML Model Specification",
+            "name": "model.mlmodel",
+            "path": "com.apple.CoreML/model.mlmodel"
+        }
+    },
+    "metadata": {
+        "author": "ESRGAN Team (Xintao Wang et al.)",
+        "license": "Apache 2.0",
+        "modelType": "esrgan",
+        "optimizedFor": "iOS",
+        "scaleFactor": 2,
+        "version": "1.0"
+    },
+    "rootModelIdentifier": "B2C9E5E3-3E9D-4373-9994-BB10EB363750"
 }

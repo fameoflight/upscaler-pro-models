@@ -1,0 +1,22 @@
+{
+  "inputDescriptions": {
+    "input": {
+      "shortDescription": "Input image tensor input",
+      "metadata": {}
+    }
+  },
+  "outputDescriptions": {
+    "var_1387": {
+      "shortDescription": "Output upscaled image var_1387",
+      "metadata": {}
+    }
+  },
+  "metadata": {
+    "modelDescription": {
+      "shortDescription": "Model super-resolution model",
+      "author": "Unknown",
+      "license": "Unknown",
+      "version": "1.0"
+    }
+  }
+}

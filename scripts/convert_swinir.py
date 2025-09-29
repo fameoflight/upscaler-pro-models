@@ -305,26 +305,52 @@ def convert_swinir_to_coreml(model_path, model_name, scale_factor, input_size=64
             output = model(sample_input)
             print(f"✅ Model output shape: {output.shape}")
 
-        # Convert to Core ML using MLProgram (iOS 15+)
-        print("🔄 Converting to CoreML MLProgram...")
+        # Convert to TorchScript format first
+        print("🔄 Converting model to TorchScript...")
+        traced_model = torch.jit.trace(model, sample_input)
 
-        mlmodel = ct.convert(
-            model,
-            inputs=[ct.ImageType(
-                name="input_image",
-                shape=sample_input.shape,
-                scale=1.0/255.0,
-                bias=[0, 0, 0],
-                color_layout=ct.colorlayout.RGB
-            )],
-            outputs=[ct.ImageType(
-                name="output_image",
-                color_layout=ct.colorlayout.RGB
-            )],
-            convert_to="mlprogram",
-            compute_precision=ct.precision.FLOAT16,
-            minimum_deployment_target=ct.target.iOS15
-        )
+        # Convert to Core ML using neural network format (more compatible)
+        print("🔄 Converting to CoreML Neural Network...")
+
+        try:
+            # Try MLProgram first (iOS 15+)
+            mlmodel = ct.convert(
+                traced_model,
+                source="pytorch",
+                inputs=[ct.ImageType(
+                    name="input_image",
+                    shape=sample_input.shape,
+                    scale=1.0/255.0,
+                    bias=[0, 0, 0],
+                    color_layout=ct.colorlayout.RGB
+                )],
+                outputs=[ct.ImageType(
+                    name="output_image",
+                    color_layout=ct.colorlayout.RGB
+                )],
+                convert_to="mlprogram",
+                compute_precision=ct.precision.FLOAT16,
+                minimum_deployment_target=ct.target.iOS15
+            )
+        except Exception as e:
+            print(f"⚠️  MLProgram conversion failed, trying neural network format: {str(e)}")
+            # Fallback to neural network format
+            mlmodel = ct.convert(
+                traced_model,
+                source="pytorch",
+                inputs=[ct.ImageType(
+                    name="input_image",
+                    shape=sample_input.shape,
+                    scale=1.0/255.0,
+                    bias=[0, 0, 0],
+                    color_layout=ct.colorlayout.RGB
+                )],
+                outputs=[ct.ImageType(
+                    name="output_image",
+                    color_layout=ct.colorlayout.RGB
+                )],
+                compute_precision=ct.precision.FLOAT16
+            )
 
         # Set model metadata
         mlmodel.short_description = f"SwinIR {scale_factor}x Super-Resolution"

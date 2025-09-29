@@ -1,0 +1,22 @@
+{
+  "inputDescriptions": {
+    "input": {
+      "shortDescription": "Input image tensor input",
+      "metadata": {}
+    }
+  },
+  "outputDescriptions": {
+    "var_46": {
+      "shortDescription": "Output upscaled image var_46",
+      "metadata": {}
+    }
+  },
+  "metadata": {
+    "modelDescription": {
+      "shortDescription": "SRCNN 3x lightweight super-resolution",
+      "author": "SRCNN Implementation",
+      "license": "MIT",
+      "version": "1.0"
+    }
+  }
+}
