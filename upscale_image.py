@@ -70,10 +70,46 @@ class ImageUpscaler:
 
     def process_image(self, img_path: str, version: str, scale: float = 2, face_enhance: bool = False, tile: int = 0) -> tuple:
         """Process a single image using Real-ESRGAN inference script."""
-        if tile <= 100 or tile is None:
+        # Only reset tile if it's None, keep small values as they are valid
+        if tile is None:
             tile = 0
 
-        print(f'Processing: {img_path}, version: {version}, scale: {scale}, face_enhance: {face_enhance}, tile: {tile}')
+        print(f'\n🔄 Processing: {img_path}')
+        print(f'   Model: {version}')
+        print(f'   Scale: {scale}x')
+        print(f'   Face enhance: {face_enhance}')
+
+        # Load input image details early for tile calculation
+        input_img = cv2.imread(str(img_path))
+        if input_img is not None:
+            h, w = input_img.shape[:2]
+            print(f'   📐 Input size: {w}x{h} pixels')
+            print(f'   📊 Expected output: {int(w*scale)}x{int(h*scale)} pixels')
+
+        # Show tile information with warning for small tiles
+        if tile == 0:
+            print(f'   🔳 Tile size: {tile} (no tiling - processes entire image at once)')
+        else:
+            print(f'   🔳 Tile size: {tile}x{tile} pixels per tile')
+            if input_img is not None:
+                tiles_x = (w + tile - 1) // tile
+                tiles_y = (h + tile - 1) // tile
+                total_tiles = tiles_x * tiles_y
+                print(f'   ⚠️  This will create {total_tiles} tiles ({tiles_x}x{tiles_y})')
+                if total_tiles > 1000:
+                    print(f'   💡 Suggestion: Use --tile 512 or --tile 0 for better performance')
+
+        # Log GPU availability
+        try:
+            import torch
+            if torch.backends.mps.is_available():
+                print(f'   🚀 GPU: Apple Silicon (MPS) - ENABLED')
+            elif torch.cuda.is_available():
+                print(f'   🚀 GPU: CUDA - ENABLED')
+            else:
+                print(f'   ⚠️  GPU: Not available - using CPU')
+        except ImportError:
+            print(f'   ⚠️  PyTorch not available for GPU detection')
 
         # Get model name
         model_name = self.model_map.get(version)
@@ -95,7 +131,8 @@ class ImageUpscaler:
             "-i", str(img_path),
             "-o", str(output_path.parent),
             "--outscale", str(scale),
-            "--tile", str(tile)
+            "--tile", str(tile),
+            "--gpu-id", "0"  # Enable GPU acceleration by default
         ]
 
         if face_enhance:
@@ -104,14 +141,44 @@ class ImageUpscaler:
         # Add model path (absolute path)
         cmd.extend(["--model_path", str(model_path.absolute())])
 
-        try:
-            # Run Real-ESRGAN inference from correct working directory
-            result = subprocess.run(cmd, capture_output=True, text=True, cwd=str(Path(__file__).parent))
+        print(f'   💾 Model file: {model_path.name}')
+        print(f'   🔧 Command: {" ".join(cmd[-6:])}')  # Show last few args
 
-            if result.returncode != 0:
-                print(f"Error running Real-ESRGAN: {result.stderr}")
-                print(f"Command: {' '.join(cmd)}")
-                raise RuntimeError(f"Real-ESRGAN failed: {result.stderr}")
+        start_time = time.time()
+        print(f'   ⏱️  Starting processing...')
+
+        try:
+            # Run Real-ESRGAN inference from correct working directory with live output
+            print(f'   🔄 Running Real-ESRGAN with live output...')
+
+            # Use Popen for real-time output
+            process = subprocess.Popen(
+                cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                universal_newlines=True,
+                bufsize=1,
+                cwd=str(Path(__file__).parent)
+            )
+
+            # Stream output in real-time
+            while True:
+                output = process.stdout.readline()
+                if output == '' and process.poll() is not None:
+                    break
+                if output:
+                    # Print Real-ESRGAN progress with indentation
+                    print(f'     {output.strip()}')
+
+            return_code = process.poll()
+            processing_time = time.time() - start_time
+
+            if return_code != 0:
+                print(f"   ❌ Error: Real-ESRGAN failed with return code {return_code}")
+                print(f"   🔧 Full command: {' '.join(cmd)}")
+                raise RuntimeError(f"Real-ESRGAN failed with return code {return_code}")
+
+            print(f'   ✅ Processing completed in {processing_time:.2f}s')
 
             # Read output image (Real-ESRGAN saves as {input}_out.{ext})
             input_name = Path(img_path).stem
@@ -122,8 +189,8 @@ class ImageUpscaler:
                 Path(img_path).parent / f"temp_output_{input_name}.png",  # Our fallback
             ]
 
+            print(f'   🔍 Looking for output files...')
             # Small delay to ensure file is written
-            import time
             time.sleep(0.5)
 
             output_file = None
@@ -133,9 +200,14 @@ class ImageUpscaler:
                     break
 
             if output_file:
+                print(f'   📁 Found output: {output_file.name}')
                 output_img = cv2.imread(str(output_file))
                 if output_img is None:
                     raise ValueError("Could not read output image")
+
+                # Log actual output dimensions
+                h, w = output_img.shape[:2]
+                print(f'   📐 Actual output size: {w}x{h} pixels')
 
                 # Determine image mode
                 img = cv2.imread(str(img_path), cv2.IMREAD_UNCHANGED)
@@ -146,6 +218,7 @@ class ImageUpscaler:
 
                 return output_img, img_mode
             else:
+                print(f'   ❌ No output file found in: {[str(p) for p in possible_outputs]}')
                 raise FileNotFoundError("Output file not created")
 
         except Exception as e:
@@ -173,7 +246,16 @@ class ImageUpscaler:
             cv2.imwrite(str(output_path), output)
 
             processing_time = time.time() - start_time
-            print(f"✓ Upscaled {input_path} -> {output_path} in {processing_time:.2f}s")
+
+            # Get file sizes for comparison
+            input_size = os.path.getsize(input_path) / 1024  # KB
+            output_size = os.path.getsize(output_path) / 1024  # KB
+
+            print(f"\n🎉 UPSCALING COMPLETE!")
+            print(f"   📥 Input:  {Path(input_path).name} ({input_size:.1f}KB)")
+            print(f"   📤 Output: {Path(output_path).name} ({output_size:.1f}KB)")
+            print(f"   ⏱️  Time:   {processing_time:.2f}s")
+            print(f"   🚀 Speed:  {input_size/processing_time:.1f}KB/s processed")
 
             return processing_time
 
@@ -302,7 +384,8 @@ Examples:
     # Processing options
     parser.add_argument('--scale', type=float, default=2, help='Rescaling factor (default: 2)')
     parser.add_argument('--face_enhance', action='store_true', help='Enhance faces with GFPGAN')
-    parser.add_argument('--tile', type=int, default=0, help='Tile size for large images (default: 0, no tiling)')
+    parser.add_argument('--tile', type=int, default=0,
+                       help='Tile size in pixels (default: 0=no tiling). Recommended: 512 for 8GB+ RAM, 256 for 4GB RAM. Very small values like 2-64 will be extremely slow!')
 
     # Output options
     parser.add_argument('-o', '--output', help='Output image file (for single image)')
@@ -336,9 +419,11 @@ Examples:
         if args.input:
             # Single image processing
             if not args.output:
-                # Generate output filename
+                # Generate output filename with _upscaled suffix
                 input_path = Path(args.input)
-                output_name = f"upscaled_{input_path.name}"
+                stem = input_path.stem
+                suffix = input_path.suffix
+                output_name = f"{stem}_upscaled{suffix}"
                 args.output = str(input_path.parent / output_name)
 
             print(f"Upscaling {args.input} using {args.version}...")
