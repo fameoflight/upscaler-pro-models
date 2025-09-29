@@ -1,0 +1,49 @@
+{
+  "schemaVersion": {
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+  },
+  "formatVersion": {
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+  },
+  "modelIdentifier": "com.realesrgan.x4plus",
+  "modelDescription": {
+    "inputDescriptions": [
+      {
+        "name": "input",
+        "shortDescription": "Input image tensor",
+        "type": "multiArray",
+        "shape": [
+          1,
+          3,
+          64,
+          64
+        ],
+        "dataType": "float32"
+      }
+    ],
+    "outputDescriptions": [
+      {
+        "name": "var_1387",
+        "shortDescription": "Upscaled image tensor",
+        "type": "multiArray",
+        "shape": [
+          1,
+          3,
+          256,
+          256
+        ],
+        "dataType": "float32"
+      }
+    ],
+    "metadata": {
+      "author": "Real-ESRGAN Team",
+      "license": "BSD 3-Clause",
+      "description": "RealESRGAN x4plus image upscaler",
+      "version": "1.0"
+    }
+  }
+}

@@ -1,24 +1,10 @@
 {
-    "fileFormatVersion": "1.0.0",
-    "itemInfoEntries": {
-        "B7674632-BFFA-435E-823C-9DF302867F8C": {
-            "author": "com.apple.CoreML",
-            "description": "CoreML Model Specification",
-            "name": "ESRGAN_2x.mlmodel",
-            "path": "com.apple.CoreML/ESRGAN_2x.mlmodel"
-        },
-        "DE0E322E-E3B4-451C-840A-FC236DA44979": {
-            "author": "com.apple.CoreML",
-            "description": "External Metadata Overlay",
-            "name": "Metadata.json",
-            "path": "com.apple.CoreML/Metadata.json"
-        },
-        "EBD23BF1-D345-4D87-8F1E-8F6EB4A27B95": {
-            "author": "com.apple.CoreML",
-            "description": "External FeatureDescription Overlay",
-            "name": "FeatureDescriptions.json",
-            "path": "com.apple.CoreML/FeatureDescriptions.json"
-        }
-    },
-    "rootModelIdentifier": "B7674632-BFFA-435E-823C-9DF302867F8C"
+  "fileFormatVersion": "1.0.0",
+  "itemInfoEntries": {
+    "Data": {
+      "path": "Data",
+      "digest": "placeholder_digest",
+      "isDirectory": true
+    }
+  }
 }

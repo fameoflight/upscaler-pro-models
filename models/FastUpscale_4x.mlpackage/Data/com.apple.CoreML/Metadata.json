@@ -1,9 +1,0 @@
-{
-  "MLModelDescriptionKey" : "Quality 4x upscaling with convolutional neural network",
-  "MLModelCreatorDefinedKey" : {
-    "com.github.apple.coremltools.version" : "8.3.0",
-    "com.github.apple.coremltools.source" : "torch==2.6.0",
-    "com.github.apple.coremltools.source_dialect" : "TorchScript"
-  },
-  "MLModelAuthorKey" : "VideoUpscaler Pro"
-}

@@ -1,0 +1,23 @@
+{
+  "fileFormatVersion": "1.0.0",
+  "itemInfoEntries": {
+    "com.apple.CoreML": {
+      "path": "com.apple.CoreML",
+      "digest": "placeholder_digest",
+      "isDirectory": true
+    }
+  },
+  "rootModelIdentifier": "com.apple.CoreML/SRCNN_x3.mlmodel",
+  "modelInfo": {
+    "modelIdentifier": "com.srcnn.srcnn_x3",
+    "modelDescription": {
+      "shortDescription": "SRCNN 3x lightweight super-resolution",
+      "metadata": {
+        "author": "SRCNN Implementation",
+        "license": "MIT",
+        "version": "1.0",
+        "scaleFactor": 3
+      }
+    }
+  }
+}

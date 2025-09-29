@@ -1,0 +1,23 @@
+{
+  "fileFormatVersion": "1.0.0",
+  "itemInfoEntries": {
+    "com.apple.CoreML": {
+      "path": "com.apple.CoreML",
+      "digest": "placeholder_digest",
+      "isDirectory": true
+    }
+  },
+  "rootModelIdentifier": "com.apple.CoreML/RealESRGAN_4x.mlmodel",
+  "modelInfo": {
+    "modelIdentifier": "com.realesrgan.realesrgan_4x",
+    "modelDescription": {
+      "shortDescription": "Real-ESRGAN 4x practical super-resolution",
+      "metadata": {
+        "author": "Real-ESRGAN Team (Xintao Wang et al.)",
+        "license": "BSD 3-Clause",
+        "version": "1.0",
+        "scaleFactor": 4
+      }
+    }
+  }
+}

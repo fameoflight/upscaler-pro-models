@@ -1,0 +1,23 @@
+{
+  "fileFormatVersion": "1.0.0",
+  "itemInfoEntries": {
+    "com.apple.CoreML": {
+      "path": "com.apple.CoreML",
+      "digest": "placeholder_digest",
+      "isDirectory": true
+    }
+  },
+  "rootModelIdentifier": "com.apple.CoreML/Waifu2x_x2.mlmodel",
+  "modelInfo": {
+    "modelIdentifier": "com.waifu2x.waifu2x_x2",
+    "modelDescription": {
+      "shortDescription": "Waifu2x 2x anime/artwork upscaler",
+      "metadata": {
+        "author": "Waifu2x Implementation",
+        "license": "MIT",
+        "version": "1.0",
+        "scaleFactor": 2
+      }
+    }
+  }
+}

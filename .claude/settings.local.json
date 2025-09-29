@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(rm:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(python:*)",
+      "Bash(pip install:*)",
+      "Bash(pip3 install:*)",
+      "Bash(python3:*)",
+      "Bash(source:*)",
+      "WebSearch",
+      "Bash(find:*)",
+      "Bash(./setup_and_convert.sh:*)",
+      "Bash(./setup_and_convert_ios.sh:*)",
+      "Bash(./create_mlpackage.sh:*)",
+      "Bash(./setup_all_models.sh:*)",
+      "Bash(./list_models.sh:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
