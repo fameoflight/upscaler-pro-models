@@ -1,0 +1,22 @@
+{
+  "inputDescriptions": {
+    "input_image": {
+      "shortDescription": "Input image tensor input_image",
+      "metadata": {}
+    }
+  },
+  "outputDescriptions": {
+    "output_image": {
+      "shortDescription": "Output upscaled image output_image",
+      "metadata": {}
+    }
+  },
+  "metadata": {
+    "modelDescription": {
+      "shortDescription": "RCAN 4x Super-Resolution with Channel Attention",
+      "author": "RCAN Team - Converted for iOS",
+      "license": "Apache 2.0",
+      "version": "1.0"
+    }
+  }
+}

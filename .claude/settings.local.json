@@ -17,7 +17,8 @@
       "Bash(./setup_all_models.sh:*)",
       "Bash(./list_models.sh:*)",
       "Bash(pip uninstall:*)",
-      "Bash(python3.11:*)"
+      "Bash(python3.11:*)",
+      "WebFetch(domain:drive.google.com)"
     ],
     "deny": [],
     "ask": []

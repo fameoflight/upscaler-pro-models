@@ -1,10 +1,20 @@
 {
-  "fileFormatVersion": "1.0.0",
-  "itemInfoEntries": {
-    "Data": {
-      "path": "Data",
-      "digest": "placeholder_digest",
-      "isDirectory": true
-    }
-  }
+    "fileFormatVersion": "1.0.0",
+    "itemInfoEntries": {
+        "B54C35BE-13CC-42FB-94B3-705BCD32C636": {
+            "author": "com.apple.CoreML",
+            "description": "CoreML Model Specification",
+            "name": "model.mlmodel",
+            "path": "com.apple.CoreML/model.mlmodel"
+        }
+    },
+    "metadata": {
+        "author": "SRCNN Implementation",
+        "license": "MIT",
+        "modelType": "srcnn",
+        "optimizedFor": "iOS",
+        "scaleFactor": 3,
+        "version": "1.0"
+    },
+    "rootModelIdentifier": "B54C35BE-13CC-42FB-94B3-705BCD32C636"
 }

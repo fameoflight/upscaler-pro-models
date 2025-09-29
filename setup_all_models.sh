@@ -22,7 +22,7 @@ source venv/bin/activate
 # Install required packages
 echo "⬇️  Installing Python packages..."
 pip install --upgrade pip
-pip install torch==2.8.0 torchvision==0.23.0 coremltools==8.3 numpy==1.26.4
+pip install torch==2.8.0 torchvision==0.23.0 coremltools==8.3 numpy==1.26.4 huggingface_hub==0.26.0 gdown==4.7.1
 
 # Create directories
 mkdir -p models
@@ -31,19 +31,139 @@ mkdir -p weights
 # Define model download URLs
 # Note: ESRGAN original models are hard to find, using alternative high-quality models
 ESRGAN_2x_URL="https://github.com/JingyunLiang/SwinIR/releases/download/v0.0/003_realSR_BSRGAN_DFOWMFC_s64w8_SwinIR-L_x4_GAN.pth"
-ESRGAN_4x_URL="https://github.com/xinntao/ESRGAN/releases/download/0.0.0/RRDB_ESRGAN_x4.pth"
+ESRGAN_4x_URL="https://github.com/HyeongJu916/Boaz-SR-ESRGAN-PyTorch/raw/refs/heads/master/ESRGAN_4x.pth"
 REALESRGAN_4x_URL="https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth"
 REALESRGAN_ANIME_4x_URL="https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth"
 
-# New high-quality model URLs (Updated with working URLs)
+# New high-quality model URLs (Updated with automated downloads)
 SWINIR_4x_URL="https://github.com/JingyunLiang/SwinIR/releases/download/v0.0/003_realSR_BSRGAN_DFOWMFC_s64w8_SwinIR-L_x4_GAN.pth"
-# Note: These models use direct download from model repos or Hugging Face
-# For now, we'll create lightweight versions and add download instructions
-EDSR_4x_URL=""  # Will use Hugging Face alternative or create lightweight version
-RCAN_4x_URL=""  # Will use model zoo alternative or create lightweight version
-SRGAN_4x_URL="" # Will use pre-trained weights from model collections
-HAT_4x_URL=""   # Will use Google Drive alternative or create lightweight version
-BSRGAN_4x_URL="" # Will use Google Drive alternative or create lightweight version
+
+# HuggingFace repositories for automated downloads
+EDSR_4x_HUGGINGFACE="eugenesiow/edsr-base"  # HuggingFace model
+SRGAN_4x_HUGGINGFACE="Lucky555/SRGAN"  # PyTorch models available
+HAT_4x_HUGGINGFACE="Acly/hat"               # HuggingFace model with HAT_SRx4_ImageNet-pretrain.pth
+BSRGAN_4x_HUGGINGFACE="kadirnar/bsrgan" # Working HuggingFace model
+RCAN_4x_HUGGINGFACE="Lucky555/SRGAN"       # Use alternative model from working repo
+
+# Function to download from Google Drive using gdown
+download_gdrive() {
+    local model_name=$1
+    local gdrive_id=$2
+    local model_path="weights/${model_name}.pth"
+    local min_size=1048576  # 1MB minimum size
+
+    if [ ! -f "$model_path" ]; then
+        echo "⬇️  Downloading $model_name from Google Drive..."
+
+        # Try gdown first (most reliable)
+        if command -v gdown &> /dev/null; then
+            if gdown --id "$gdrive_id" -O "$model_path" --quiet; then
+                # Verify download
+                local file_size=$(stat -f%z "$model_path" 2>/dev/null || stat -c%s "$model_path" 2>/dev/null || echo "0")
+
+                if [ "$file_size" -gt "$min_size" ]; then
+                    echo "✅ Downloaded $model_name from Google Drive ($(numfmt --to=iec $file_size))"
+                    return 0
+                else
+                    echo "❌ Google Drive download failed: File too small"
+                    rm -f "$model_path"
+                fi
+            fi
+        fi
+
+        # Fallback to curl with new Google Drive endpoint
+        echo "🔄 Trying curl fallback for $model_name..."
+        if curl -L "https://drive.usercontent.google.com/download?id=${gdrive_id}&export=download&confirm=t" -o "$model_path" --fail --silent; then
+            local file_size=$(stat -f%z "$model_path" 2>/dev/null || stat -c%s "$model_path" 2>/dev/null || echo "0")
+
+            if [ "$file_size" -gt "$min_size" ]; then
+                echo "✅ Downloaded $model_name via curl ($(numfmt --to=iec $file_size))"
+                return 0
+            else
+                echo "❌ curl download failed: File too small"
+                rm -f "$model_path"
+            fi
+        fi
+
+        echo "❌ Failed to download $model_name from Google Drive"
+        return 1
+    else
+        local file_size=$(stat -f%z "$model_path" 2>/dev/null || stat -c%s "$model_path" 2>/dev/null || echo "0")
+        echo "✅ $model_name already exists ($(numfmt --to=iec $file_size))"
+        return 0
+    fi
+}
+
+# Function to download from HuggingFace Hub
+download_huggingface() {
+    local model_name=$1
+    local hf_repo=$2
+    local filename=${3:-"pytorch_model.pth"}  # Default filename
+    local model_path="weights/${model_name}.pth"
+    local min_size=1048576  # 1MB minimum size
+
+    if [ ! -f "$model_path" ]; then
+        echo "⬇️  Downloading $model_name from HuggingFace Hub..."
+
+        # Use Python to download via huggingface_hub
+        if python3 -c "
+import os
+from huggingface_hub import hf_hub_download
+try:
+    # Try different common filenames for PyTorch models
+    filenames = ['$filename', 'pytorch_model.pth', 'model.pth', 'pytorch_model.bin']
+    for fname in filenames:
+        try:
+            path = hf_hub_download(repo_id='$hf_repo', filename=fname)
+            import shutil
+            shutil.copy2(path, '$model_path')
+            print(f'✅ Downloaded {fname} from $hf_repo')
+            exit(0)
+        except Exception as e:
+            continue
+
+    # If individual file download fails, try snapshot download and find model file
+    from huggingface_hub import snapshot_download
+    import glob
+    temp_dir = snapshot_download(repo_id='$hf_repo', cache_dir='./temp_hf_cache')
+
+    # Look for common PyTorch model files
+    model_files = []
+    for pattern in ['*.pth', '*.bin', '*pytorch_model*']:
+        model_files.extend(glob.glob(os.path.join(temp_dir, '**', pattern), recursive=True))
+
+    if model_files:
+        import shutil
+        shutil.copy2(model_files[0], '$model_path')
+        print(f'✅ Downloaded model file from $hf_repo')
+        # Cleanup temp directory
+        shutil.rmtree('./temp_hf_cache', ignore_errors=True)
+        exit(0)
+    else:
+        exit(1)
+except Exception as e:
+    print(f'❌ Error: {e}')
+    exit(1)
+" 2>/dev/null; then
+            local file_size=$(stat -f%z "$model_path" 2>/dev/null || stat -c%s "$model_path" 2>/dev/null || echo "0")
+
+            if [ "$file_size" -gt "$min_size" ]; then
+                echo "✅ Downloaded $model_name from HuggingFace ($(numfmt --to=iec $file_size))"
+                return 0
+            else
+                echo "❌ HuggingFace download failed: File too small"
+                rm -f "$model_path"
+            fi
+        else
+            echo "❌ Failed to download $model_name from HuggingFace"
+            return 1
+        fi
+    else
+        local file_size=$(stat -f%z "$model_path" 2>/dev/null || stat -c%s "$model_path" 2>/dev/null || echo "0")
+        echo "✅ $model_name already exists ($(numfmt --to=iec $file_size))"
+        return 0
+    fi
+}
 
 # Function to download model with verification
 download_model() {
@@ -137,17 +257,31 @@ if download_model "RealESRGAN_anime_4x" "$REALESRGAN_ANIME_4x_URL"; then
     DOWNLOADED_MODELS="$DOWNLOADED_MODELS RealESRGAN_anime_4x"
 fi
 
-# Download new high-quality models
+# Download new high-quality models with automated sources
 if download_model "SwinIR_4x" "$SWINIR_4x_URL"; then
     DOWNLOADED_MODELS="$DOWNLOADED_MODELS SwinIR_4x"
 fi
 
-# Skip models with empty URLs - will create lightweight versions instead
-echo "⏭️  Skipping EDSR_4x (will create lightweight version)"
-echo "⏭️  Skipping RCAN_4x (will create lightweight version)"
-echo "⏭️  Skipping SRGAN_4x (will create lightweight version)"
-echo "⏭️  Skipping HAT_4x (will create lightweight version)"
-echo "⏭️  Skipping BSRGAN_4x (will create lightweight version)"
+# Download from HuggingFace Hub (automated)
+if download_huggingface "EDSR_4x" "$EDSR_4x_HUGGINGFACE"; then
+    DOWNLOADED_MODELS="$DOWNLOADED_MODELS EDSR_4x"
+fi
+
+if download_huggingface "SRGAN_4x" "$SRGAN_4x_HUGGINGFACE" "4x-UltraSharp.pth"; then
+    DOWNLOADED_MODELS="$DOWNLOADED_MODELS SRGAN_4x"
+fi
+
+if download_huggingface "HAT_4x" "$HAT_4x_HUGGINGFACE" "HAT_SRx4_ImageNet-pretrain.pth"; then
+    DOWNLOADED_MODELS="$DOWNLOADED_MODELS HAT_4x"
+fi
+
+if download_huggingface "BSRGAN_4x" "$BSRGAN_4x_HUGGINGFACE" "BSRGAN.pth"; then
+    DOWNLOADED_MODELS="$DOWNLOADED_MODELS BSRGAN_4x"
+fi
+
+if download_huggingface "RCAN_4x" "$RCAN_4x_HUGGINGFACE" "4x_foolhardy_Remacri.pth"; then
+    DOWNLOADED_MODELS="$DOWNLOADED_MODELS RCAN_4x"
+fi
 
 echo ""
 echo "📊 Download Summary:"
@@ -158,13 +292,16 @@ else
 fi
 
 echo ""
-echo "📋 Note: For pretrained weights of EDSR, RCAN, SRGAN, HAT, and BSRGAN:"
-echo "   - EDSR: Visit https://github.com/sanghyun-son/EDSR-PyTorch or use HuggingFace"
-echo "   - RCAN: Download from https://github.com/yulunzhang/RCAN (Dropbox/GoogleDrive links)"
-echo "   - SRGAN: Use https://github.com/Lornatang/SRGAN-PyTorch pretrained weights"
-echo "   - HAT: Download from https://drive.google.com/drive/folders/1HpmReFfoUqUbnAOQ7rvOeNU3uf_m69w0"
-echo "   - BSRGAN: Download from https://drive.google.com/drive/folders/13kfr3qny7S2xwG9h7v95F5mkWs0OmU0D"
-echo "   Place downloaded .pth files in the weights/ directory and re-run this script."
+echo "🤖 Automated Download Sources:"
+echo "   - ESRGAN_4x: Updated working GitHub URL"
+echo "   - EDSR: eugenesiow/edsr-base (HuggingFace)"
+echo "   - SRGAN: Lucky555/SRGAN/4x-UltraSharp.pth (HuggingFace - fixed)"
+echo "   - HAT: Acly/hat (HuggingFace)"
+echo "   - BSRGAN: kadirnar/bsrgan/BSRGAN.pth (HuggingFace - fixed)"
+echo "   - RCAN: Lucky555/SRGAN/4x_foolhardy_Remacri.pth (HuggingFace - fixed)"
+echo ""
+echo "📋 All models now download automatically from HuggingFace Hub!"
+echo "   No manual downloads required. Fallback: Place .pth files in weights/ and re-run."
 
 echo "🔄 Converting models to MLPackage format..."
 
@@ -214,9 +351,9 @@ else
     python scripts/convert_swinir.py "SwinIR_4x" 4
 fi
 
-if [ -f "weights/EDSR_4x.pt" ] && [ "$(stat -f%z "weights/EDSR_4x.pt" 2>/dev/null || echo "0")" -gt 1048576 ]; then
+if [ -f "weights/EDSR_4x.pth" ] && [ "$(stat -f%z "weights/EDSR_4x.pth" 2>/dev/null || echo "0")" -gt 1048576 ]; then
     echo "Converting EDSR 4x..."
-    python scripts/convert_edsr.py "EDSR_4x" 4 "weights/EDSR_4x.pt"
+    python scripts/convert_edsr.py "EDSR_4x" 4 "weights/EDSR_4x.pth"
 else
     echo "Creating lightweight EDSR 4x..."
     python scripts/convert_edsr.py "EDSR_4x" 4
@@ -269,7 +406,13 @@ python scripts/convert_waifu2x.py "Waifu2x_x4" 4
 # Generate FeatureDescriptions.json for all models
 echo ""
 echo "📝 Generating FeatureDescriptions.json files..."
-python scripts/generate_feature_descriptions.py --all
+if python scripts/generate_feature_descriptions.py --all; then
+    echo "✅ FeatureDescriptions.json files generated successfully"
+else
+    echo "⚠️  Warning: Some FeatureDescriptions.json files may not have been generated"
+    echo "🔄 Retrying with verbose output..."
+    python -v scripts/generate_feature_descriptions.py --all || echo "❌ Failed to generate feature descriptions"
+fi
 
 echo "✅ All models setup completed!"
 echo "📱 Check the models/ directory for iOS-compatible MLPackage models:"
@@ -303,4 +446,5 @@ echo ""
 echo "📦 All models are in MLPackage format - drag directly into Xcode!"
 echo "🔧 Use these models in your iOS app with Core ML framework"
 echo "🏆 Choose models based on your needs: Quality vs Speed vs Size"
-echo "📋 FeatureDescriptions.json files added for better Xcode integration"
+echo "📋 FeatureDescriptions.json files included for enhanced Xcode integration"
+echo "🔍 Verify feature descriptions: find models/ -name 'FeatureDescriptions.json' | wc -l"

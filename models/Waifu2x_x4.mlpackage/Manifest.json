@@ -1,10 +1,20 @@
 {
-  "fileFormatVersion": "1.0.0",
-  "itemInfoEntries": {
-    "Data": {
-      "path": "Data",
-      "digest": "placeholder_digest",
-      "isDirectory": true
-    }
-  }
+    "fileFormatVersion": "1.0.0",
+    "itemInfoEntries": {
+        "E1628C69-8414-413F-8295-663920DB36CD": {
+            "author": "com.apple.CoreML",
+            "description": "CoreML Model Specification",
+            "name": "model.mlmodel",
+            "path": "com.apple.CoreML/model.mlmodel"
+        }
+    },
+    "metadata": {
+        "author": "Waifu2x Implementation",
+        "license": "MIT",
+        "modelType": "waifu2x",
+        "optimizedFor": "iOS",
+        "scaleFactor": 4,
+        "version": "1.0"
+    },
+    "rootModelIdentifier": "E1628C69-8414-413F-8295-663920DB36CD"
 }

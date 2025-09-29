@@ -258,7 +258,7 @@ def convert_swinir_to_coreml(model_path, model_name, scale_factor, input_size=64
     print(f"🔄 Converting {model_name} (scale: {scale_factor}x) to CoreML...")
 
     try:
-        if os.path.exists(model_path):
+        if model_path and os.path.exists(model_path):
             print(f"📥 Loading pre-trained model: {model_path}")
             # Load pre-trained model
             state_dict = torch.load(model_path, map_location='cpu')
