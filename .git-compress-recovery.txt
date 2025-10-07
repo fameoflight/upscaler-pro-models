@@ -1,0 +1,11 @@
+# Git Compress Recovery Information
+# Generated on: 2025-10-07 14:00:28
+
+Remote URL: https://github.com/fameoflight/upscaler-pro-models.git
+Original Commit: 63388aa94fe31302e86845228db180b681796c63
+Compression Date: 2025-10-07T14:00:28+05:30
+
+# To restore original repository:
+# 1. Clone: git clone https://github.com/fameoflight/upscaler-pro-models.git original-repo
+# 2. Your files are safe in the current directory
+# 3. Remove this recovery file when done

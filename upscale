@@ -1,0 +1,16 @@
+#!/bin/bash
+# Wrapper script to automatically activate virtual environment
+
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+VENV_DIR="$SCRIPT_DIR/venv"
+
+# Check if virtual environment exists
+if [ ! -d "$VENV_DIR" ]; then
+    echo "Error: Virtual environment not found at $VENV_DIR"
+    echo "Please run setup script first to create the virtual environment."
+    exit 1
+fi
+
+# Activate virtual environment and run the Python script
+source "$VENV_DIR/bin/activate" && python "$SCRIPT_DIR/upscale_image.py" "$@"
